@@ -13,7 +13,9 @@
   "dependencies": {
     "@mysten/sui.js": "^0.50.1",
     "dotenv": "^16.4.5",
+    "ethos-connect": "^0.0.194",
     "react": "^18.2.0",
+    "react-color": "^2.19.3",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {

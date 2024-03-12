@@ -8,6 +8,7 @@ import { execSync } from "child_process";
 import { fileURLToPath } from "url";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import { writeFileSync } from "fs";
+import { bcs } from "@mysten/sui.js/bcs";
 
 const priv_key = process.env.PRIVATE_KEY;
 if (!priv_key) {
@@ -120,20 +121,22 @@ quadrant_trx.moveCall({
 });
 
 console.log("getting addresses of Quadrants...");
-console.log("Quadrant trax looks like -: ", quadrant_trx.object(place_id));
+
 const read_result = await client.devInspectTransactionBlock({
   sender: keypair.toSuiAddress(),
   transactionBlock: quadrant_trx,
 });
 
-console.log("Read results are -:", read_result);
+const return_values = read_result?.results?.[0].returnValues?.[0]?.[0];
 
-const return_values = read_result?.results?.[0].returnValues;
-console.log("return values are ", return_values);
 if (!return_values) {
   console.log(`Error: Return Values not found`);
   process.exit(1);
 }
+const quadrants = bcs
+  .de("vector<address>", new Uint8Array(return_values))
+  .map((address: string) => "0x" + address);
+deployed_address.QUADRANTS = quadrants;
 
 const deployed_path = path.join(
   path_to_scripts,
