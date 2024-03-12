@@ -1,6 +1,6 @@
 module new_sui::my_module {
     use std::vector;
-    use sui::object::{UID, new};
+    use sui::object::{UID, new, uid_to_address};
     use sui::tx_context::{TxContext};
     use sui::transfer::share_object;
     use sui::dynamic_object_field;
@@ -25,19 +25,19 @@ module new_sui::my_module {
         let i = 0;
         while(i < length){
             vector::push_back(&mut row, 16_777_215);
-            i = i+1;
+            i = i + 1;
         };
         // return vector
         row
     }
-    fun make_quadrant_pixels(length: u64): vector<vector<u32>>{
+    fun make_quadrant_pixels(length: u64): vector<vector<u32>> {
         // init empty vector
         let grid : vector<vector<u32>> = vector::empty<vector<u32>>();
         // append length number of  #ffffffresults of call to make_row length times
         let i = 0;
         while(i < length){
             vector::push_back(&mut grid, make_row(length));
-            i = i+1;
+            i = i + 1;
         };
         // return vector
         grid
@@ -92,11 +92,20 @@ module new_sui::my_module {
         *pixel =  color;
     }   
 
-    // public fun get_quadrants(place: &mut Place): vector<address>{
-    //     // create a empty vector
-    //     // iterate from 0,3
-    //     // lookup quadrant in object mapping from quarant id
-    //     // append id of each quadrant to vector
-    //     // return vector
-    // }   
+    public fun get_quadrants(place: &Place): vector<address>{
+        // create a empty vector
+        let addresses = vector::empty<address>();
+        // iterate from 0,3
+        // lookup quadrant in object mapping from quarant id
+        // append id of each quadrant to vector
+        let i = 0;
+        while(i < 4) {
+            let quadrant = dynamic_object_field::borrow<u8, Quadrant>(&place.id,i);
+            let quadrant_address = uid_to_address(&quadrant.id);
+            vector::push_back(&mut addresses,quadrant_address);
+            i + i + 1;
+        };
+        // return vector
+        addresses
+    }   
 }
