@@ -1,22 +1,18 @@
-import { useState } from "react";
 import "./App.css";
-import { CompactPicker } from "react-color";
 import { EthosConnectStatus, SignInButton, ethos } from "ethos-connect";
-
+import PlaceBoard from "./components/PlaceBoard";
+import { CompactPicker } from "react-color";
+import { useState } from "react";
 function App() {
-  const [color, set_color] = useState("#00000)");
-  const { status, wallet } = ethos.useWallet();
-
-  console.log(wallet?.contents);
+  const { status } = ethos.useWallet();
+  const [color, set_color] = useState("#000000");
 
   if (status == EthosConnectStatus.Connected) {
     return (
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "4rem" }}
       >
-        <div
-          style={{ border: "1px solid black", width: "800px", height: "800px" }}
-        ></div>
+        <PlaceBoard color={color} />
         <div
           style={{
             margin: "4rem",
@@ -27,11 +23,11 @@ function App() {
             justifyContent: "center",
           }}
         >
-          <h1> Sui Place</h1>
-          <p style={{ marginTop: "4rem", marginBottom: " 4rem" }}>
-            Are you ready to join the sui community in placing a tile on the
-            board? Select a color then ctrl+click (win) or cmd+click (mac) to
-            place.
+          <h1>Sui Pixel Place</h1>
+          <p style={{ marginTop: "4rem", marginBottom: "4rem" }}>
+            Are you ready to join the Sui community in placing
+            <br /> a tile on the board? Select a color then ctrl+click (win) or
+            cmd+click (mac) to place.
           </p>
           <div style={{ marginBottom: "4rem" }}>
             <CompactPicker
@@ -39,6 +35,10 @@ function App() {
               onChangeComplete={(new_color) => set_color(new_color.hex)}
             />
           </div>
+          <p style={{ marginBottom: "4rem" }}>
+            Sui Place is currently only available on devnet, make sure your
+            wallet network is properly set.
+          </p>
         </div>
       </div>
     );
@@ -51,7 +51,10 @@ function App() {
   } else {
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <SignInButton></SignInButton>
+        <SignInButton
+          style={{ padding: "1rem", marginTop: "16rem" }}
+          children={<h1>Connect a Wallet to View Sui Place</h1>}
+        />
       </div>
     );
   }
